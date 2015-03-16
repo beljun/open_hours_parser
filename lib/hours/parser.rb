@@ -1,10 +1,12 @@
+# encoding: UTF-8
+
 module Hours
   class Parser
     def parse(text)
-      tokenize(text)
+      tokens = tokenize(text)
+      open_hours = Chunker.new(tokens).extract
+      open_hours.to_s
     end
-
-    private
 
     def tokenize(text)
       t = pre_normalize(text)
@@ -13,10 +15,17 @@ module Hours
       tokens.select { |token| token.tagged? }
     end
 
+    private
+
     def pre_normalize(text)
       t = text.dup.to_s.downcase
-      t = t.gsub(/-/, ' - ')
-      t = t.gsub(/,/, ' , ')
+
+      # strange unicode
+      t = t.gsub '：', ': '
+      t = t.gsub '；', '; '
+      t = t.gsub '–', '-'
+      
+      t = t.gsub /([-;,.&])/, ' \1 ' 
     end
   end
 end

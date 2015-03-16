@@ -1,23 +1,13 @@
 module Hours
   class Token
-    attr_reader :word, :tags
+    attr_accessor :word, :tag, :value
 
     def initialize(word)
       @word = word
-      @tags = []
-    end
-
-    def tag(new_tag)
-      @tags << new_tag if new_tag
     end
 
     def tagged?
-      tags.size > 0
-    end
-
-    def has_tag?(ask_tag)
-      ask_tag = [ask_tag] unless ask_tag.is_a? Array
-      (tags & ask_tag).size > 0
+      !tag.nil?
     end
   end
 end
