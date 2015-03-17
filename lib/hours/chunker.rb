@@ -1,14 +1,21 @@
 module Hours
+  # This is a very naive, hand-coded shallow parser. In real life, we'd get more mileage if we start from an existing library.
   class Chunker
     attr_reader :tokens, :notated
 
     def initialize(tokens)
       @tokens = tokens
+
+      # A custom notation to represent the tokens and tags into a single string.
+      # We'll use this notated string to detect chunks via regular expressions on tokens.
+      # Regular expressions because didn't wanna code a left-to-right parser.
       @notated = @tokens.collect.with_index { |el, i| "#{el.tag.to_s}_#{i}" }.join(' ')
     end
 
     def extract
       open_hours = OpenHours.new
+
+      # Decide which handler to invoke depending on phrase (DAYS and TIMES vs TIMES and DAYS).
       first_relevant_tag = tokens.find { |el| [:DAY, :TIME].include? el.tag }.tag
 
       open_hours.entries = 
@@ -27,6 +34,7 @@ module Hours
       tokens[str.match(/_(\d+)/)[1].to_i].value
     end
 
+    # Phrase is DAYS and then TIME with possible repetitions.
     def match_days_times str
       entries = []
       matches = str.scan /((?:(?:DAY|TO)_\d+\s*)+)((?:(?:TIME|TO)_\d+\s*)+)/
@@ -40,6 +48,7 @@ module Hours
       entries
     end
 
+    # Phrase is TIMES and then DAYS with possible repetitions.
     def match_times_days str
       entries = []
       matches = str.scan /((?:(?:TIME|TO)_\d+\s*)+)((?:(?:DAY|TO)_\d+\s*)+)/

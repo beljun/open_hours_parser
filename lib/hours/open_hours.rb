@@ -1,4 +1,7 @@
 module Hours
+  # The parsed opening hours from the chunker go here. 
+  # They are then normalized (continuous ranges are merged, etc).
+  # to_s() transforms into the expected output syntax (see tests).
   class OpenHours
     attr_accessor :entries
 
@@ -7,6 +10,7 @@ module Hours
       @week_hours, @merged_hours = nil, nil
     end
 
+    # Transforms the normalized hours into the expected output syntax as required by the specs.
     def to_s
       opens = 
         merged_hours.sort_by { |el| [display_sort_priority(el[:days].first), el[:days].first.to_s] }.collect do |el|
@@ -25,6 +29,8 @@ module Hours
       "S#{opens.join(';')}"
     end
 
+    # Table of hours is transformed into arrays or ranges of continuous days.
+    # Crossover from Sunday to Monday are also handled. 
     def merged_hours
       return @merged_hours if @merged_hours
 
@@ -36,6 +42,8 @@ module Hours
         end
     end
 
+    # Normalized table of hours for the week (7 days).
+    # Also, overlapping hour ranges within a day are merged.
     def week_hours
       return @week_hours if @week_hours
 

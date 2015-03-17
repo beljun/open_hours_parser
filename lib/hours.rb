@@ -6,6 +6,7 @@ require 'hours/chunker.rb'
 require 'hours/parser.rb'
 
 module Hours
+  # Main entry point for this function.
   def self.parse(text)
     Parser.new().parse(text)
   end

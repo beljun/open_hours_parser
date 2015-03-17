@@ -2,12 +2,15 @@
 
 module Hours
   class Parser
+    # This hand-coded parser uses tokenization -> tagging -> shallow parsing (chunking).
+    # NOTE: In real life, I wouldn't write it this way. Instead, I'll try to start from one the many existing libraries.
     def parse(text)
       tokens = tokenize(text)
       open_hours = Chunker.new(tokens).extract
       open_hours.to_s
     end
 
+    # Split the cleansed text on whitespace and return only tagged (relevant) tokens.
     def tokenize(text)
       t = pre_normalize(text)
       tokens = t.split(' ').map { |word| Token.new(word) }
@@ -17,6 +20,8 @@ module Hours
 
     private
 
+    # We try to clean up and normalize the input text as much as we can prior to tokenization.
+    # When adding new handlers, consider first if an addition here will suffice.
     def pre_normalize(text)
       t = text.dup.to_s.downcase
 

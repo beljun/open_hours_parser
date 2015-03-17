@@ -1,5 +1,6 @@
 module Hours
   class Tagger
+    # Detect if a token belongs to one of the relevant categories and tag (DAY, TO, TIMES).
     def scan(tokens)
       tokens.map.with_index do |token, i|
         word = token.word
