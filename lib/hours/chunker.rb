@@ -8,7 +8,7 @@ module Hours
 
       # A custom notation to represent the tokens and tags into a single string.
       # We'll use this notated string to detect chunks via regular expressions on tokens.
-      # Regular expressions because didn't wanna code a left-to-right parser.
+      # Regular expressions because didn't wanna write a left-to-right parser from scratch.
       @notated = @tokens.collect.with_index { |el, i| "#{el.tag.to_s}_#{i}" }.join(' ')
     end
 
