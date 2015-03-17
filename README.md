@@ -1,6 +1,6 @@
 # Opening Hours Parser
 
-This project parses opening hours of restaurants as they are commonly written. The code is in pure Ruby with no additional dependencies outside of the stock install. This basically means that everything was hand-coded. Obviously, this shouldn't be done in real life. Instead, one should start with the many existing NLP libraries -- probably a parser generator using a subset or custom grammar.
+This project parses opening hours of stores as they are commonly written. The code is in pure Ruby with no additional dependencies outside of the stock install. This basically means that everything was hand-coded. Obviously, this shouldn't be done in real life. Instead, one should start with the many existing NLP libraries -- probably a parser generator using a subset or custom grammar.
 
 That being said, this implementation uses a tokenizer, tagger, and chunker (shallow parser). The parsed data are then passed to an OpenHours class that takes care of normalizing and merging the ranges and formatting the final output according to the specs.
 
