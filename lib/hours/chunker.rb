@@ -9,7 +9,15 @@ module Hours
 
     def extract
       open_hours = OpenHours.new
-      open_hours.entries = match_days_times notated
+      first_relevant_tag = tokens.find { |el| [:DAY, :TIME].include? el.tag }.tag
+
+      open_hours.entries = 
+        if first_relevant_tag == :TIME
+          match_times_days notated
+        else
+          match_days_times notated
+        end
+
       open_hours
     end
 
@@ -26,6 +34,19 @@ module Hours
         entry = {}
         entry[:days] = match_days match[0]
         entry[:hours] = match_hours match[1]
+        entries << entry
+      end
+
+      entries
+    end
+
+    def match_times_days str
+      entries = []
+      matches = str.scan /((?:(?:TIME|TO)_\d+\s*)+)((?:(?:DAY|TO)_\d+\s*)+)/
+      matches.each do |match|
+        entry = {}
+        entry[:days] = match_days match[1]
+        entry[:hours] = match_hours match[0]
         entries << entry
       end
 
