@@ -35,7 +35,7 @@ In case yours doesn't meet the version requirements, the easiest way to get Ruby
 
 ## Running the Tests
 
-The tests are in files under ```test/```. The core tests as included in the original specs are in ```test_basic.rb```. Additonal enhancements such as inverted time and day phrasing have their tets in ```test_extras.rb```.
+The tests are in files under ```test/```. The core tests as included in the original specs are in ```test_basic.rb```. Additonal enhancements such as inverted time and day phrasing have their tests in ```test_extras.rb```.
 
 Please ```cd``` to the module's top-level directory prior to pasting the commands below.
 

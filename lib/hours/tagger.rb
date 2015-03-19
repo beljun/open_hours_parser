@@ -17,6 +17,9 @@ module Hours
         # Match range symbols 
         token.tag = :TO if word =~ /^(-|to|until)$/
 
+        # Match am/pm modifiers
+        token.tag, token.value = :AMPM, word.to_sym if word =~ /^(am|pm)$/
+
         # Match times (00:00 to 28:00); val is time in minutes.
         match = word.scan /^(\d{1,2})(?::?(\d{2}))?$/
         if match && !match.empty?

@@ -48,6 +48,11 @@ module Hours
       t = t.gsub '–', '-'
       t = t.gsub '一', '-'
 
+      # AM/PM modifiers
+      t = t.gsub 'a.m.', 'am'
+      t = t.gsub 'p.m.', 'pm'
+      t = t.gsub /(\d)(am|pm)/, '\1 \2'
+
       # Pad interesting symbols with whitespaces so we can tokenize them independently.
       t = t.gsub /([-;,.&])/, ' \1 '
       t = t.gsub '(', ' ( '

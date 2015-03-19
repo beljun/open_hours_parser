@@ -31,13 +31,13 @@ module Hours
     private
 
     def token_value str
-      tokens[str.match(/_(\d+)/)[1].to_i].value
+      tokens[str.match(/_(\d+)/)[1].to_i].value if str
     end
 
     # Phrase is DAYS and then TIME with possible repetitions.
     def match_days_times str
       entries = []
-      matches = str.scan /((?:(?:DAY|TO)_\d+\s*)+)((?:(?:TIME|TO)_\d+\s*)+)/
+      matches = str.scan /((?:(?:DAY|TO)_\d+\s*)+)((?:(?:TIME|TO|AMPM)_\d+\s*)+)/
       matches.each do |match|
         entry = {}
         entry[:days] = match_days match[0]
@@ -51,7 +51,7 @@ module Hours
     # Phrase is TIMES and then DAYS with possible repetitions.
     def match_times_days str
       entries = []
-      matches = str.scan /((?:(?:TIME|TO)_\d+\s*)+)((?:(?:DAY|TO)_\d+\s*)+)/
+      matches = str.scan /((?:(?:TIME|TO|AMPM)_\d+\s*)+)((?:(?:DAY|TO)_\d+\s*)+)/
       matches.each do |match|
         entry = {}
         entry[:days] = match_days match[1]
@@ -80,13 +80,12 @@ module Hours
     end
 
     def match_hours str
-      hours = []
-      matches = str.scan /((TIME_\d+) (?:TO_\d+\s*)+ (TIME_\d+))+/
-      matches.each do |match|
-        a = token_value(match[1]).to_i
-        b = token_value(match[2]).to_i 
-
-        hours << Range.new(a, (b < a ? b + 1440 : b))
+      matches = str.scan /((TIME_\d+)(\s*AMPM_\d+)? (?:TO_\d+\s*)+ (TIME_\d+)(\s*AMPM_\d)?)+/
+      hours = matches.collect do |match|
+        t1, ampm1, t2, ampm2 = token_value(match[1]).to_i, token_value(match[2]), token_value(match[3]).to_i, token_value(match[4])
+        a = t1 < 12*60 && (ampm1 || ampm2) == :pm ? t1 + 12*60 : t1
+        b = t2 < 12*60 && ampm2 == :pm ? t2 + 12*60 : t2
+        Range.new(a, (b < a ? b + 24*60 : b))
       end
       hours
     end
